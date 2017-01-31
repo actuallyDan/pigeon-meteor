@@ -1,0 +1,19 @@
+{"public":{
+	"themes": {
+		"default": {
+			"main": "blue",
+			"dark" : "dark blue",
+			"light" : "light blue",
+			"accent" : "turquoise"
+		},
+		"dark" : {
+			"main": "red",
+			"dark" : "dark red",
+			"light" : "light red",
+			"accent" : "maroon"
+		}
+	}
+}, 
+"private":{
+
+}}
