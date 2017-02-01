@@ -5,7 +5,6 @@ import './main.less';
 import './animate.css';
 
 class MainWrapper extends React.Component {
-	
 	render(){
 
 		return (<div className='main-wrapper'>

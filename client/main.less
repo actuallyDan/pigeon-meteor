@@ -59,30 +59,44 @@
   color: #00bfa5;
 }
 #login-form {
-  margin: 10em 0;
-  height: 50%;
-  width: 96%;
-  align-content: middle;
-  text-align: center;
-}
-#login-form form p {
+margin: 10em auto;
+    height: 50%;
+    width: 95%;
+    text-align: center;
+ form p {
   font-size: 1em;
   width: 80%;
   margin: 5% 10%;
 }
-#login-form form input {
+form input {
   text-align: center;
 }
-.form-input{
-  background-color: transparent;
-  color: #616161;
-  border: none;
-  border-bottom: 1px solid #424242;
+}
+#register-form {
+  margin: 10em auto;
+  height: 50%;
+  width: 96%;
+  text-align: center;
+ form p {
   font-size: 1em;
-  line-height: 1em;
-  padding: 0.25em;
-  height: 1em;
   width: 80%;
+  margin: 5% 10%;
+}
+form input {
+  text-align: center;
+}
+}
+.form-input{
+    background-color: transparent;
+    color: #fff;
+    border: none;
+    border-bottom: 1px solid #424242;
+    font-size: 1em;
+    line-height: 1em;
+    padding: 0.25em;
+    height: 1em;
+    width: 70%;
+    margin-bottom: 1.5em;
 }
 /* Dashboard */
 #topnav{
@@ -213,73 +227,31 @@
   float: left;
   border: 1px solid #fff;
 }
-/* Sweetalert override */
-.sweet-alert {
-  font-family: "Rajdhani", sans-serif;
-  border-radius: 0;
-  border: 1px solid #1de9b6;
-  color: white !important;
-  background: #212121;
+.btn {
+    border: 1px solid #1de9b6;
+    height: 2em;
+    width: 6rem;
+    font-size: 1.5em;
+    line-height: 1.3em;
+    margin: 1em;
+    background: #212121;
+    color: #1de9b6;
+    .error {
+      border: 1px solid #f44336;
+       background: #212121;
+      color: #f44336;
+    }
 }
-.sweet-alert h2 {
-  color: #fff !important;
+.btn:hover {
+    border: 1px solid #1de9b6;
+     background: #1de9b6;
+     color: #212121;
 }
-.sweet-alert button {
-  border-radius: 0;
-  border: 1px solid #1de9b6;
-  background: #212121 !important;
-  color: #1de9b6 !important;
+.error:hover {
+  border: 1px solid #f44336;
+       background: #f44336;
+      color: #212121;
 }
-.sweet-alert .sa-icon.sa-error .sa-line {
-  border-radius: 0;
-  background-color: #f44336 !important;
-  height: 2px;
-  top: 40px;
-}
-.sweet-alert .sa-icon.sa-error{
-  border-color: #f44336 !important;
-}
-.sweet-alert .sa-icon {
-  border: 2px solid gray;
-}
-.sweet-alert .sa-icon.sa-success .sa-placeholder {
-  border: #1de9b6;
-}
-.sweet-alert .sa-icon.sa-success::before, .sweet-alert .sa-icon.sa-success::after {
-  background-color: #212121 !important;
-
-}
-.sweet-alert .sa-icon.sa-success .sa-fix{
-  background-color: #212121 !important;
-}
-.sweet-alert .sa-icon.sa-success .sa-line {
-  height: 2px;
-  background-color: #1de9b6 !important;
-  border-radius: 0;
-}
-.sweet-alert .sa-icon.sa-success .sa-line.sa-long {
-  right: 5px;
-}
-.sweet-alert .sa-icon.sa-success {
-  border-color: #1de9b6 !important;
-}
-.sweet-alert.show-input input {
-  border: none;
-  border-bottom: 1px solid #1de9b6;
-  background: none;
-  border-radius: 0;
-  color: white;
-}
-.sweet-alert.show-input input:focus {
-  outline: none;
-  box-shadow: none;
-}
-.sweet-alert button.confirm:hover {
-  color: #424242 !important;
-  background: #1de9b6 !important;
-}
-.sweet-alert button.cancel:hover {
-  color: #424242 !important;
-  background: #f44336 !important;
-  border: #f44336 1px solid;
+.add-glow {
+  box-shadow: 0 0 0.5em rgb(29,233,182);
 }

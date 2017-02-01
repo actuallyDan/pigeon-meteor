@@ -1,5 +1,6 @@
-// Tasks = new Mongo.Collection('Tasks');
+Channels = new Mongo.Collection('Channels');
+Messages = new Mongo.Collection('Messages');
 
-// Meteor.publish("userTasks", function(){
-// 	return Tasks.find({user: this.userId});
-// });
+Meteor.publish("userTasks", function(){
+	return Channels.find({userId: this.userId});
+});
