@@ -51,9 +51,9 @@ export default class LoginForm extends React.Component {
 	}
 	render(){
 		if(this.state.showLogin){
-			return (<div className='container' id="login-form">
-				<div className='logo-login mdi mdi mdi-hexagon-multiple'></div>
-				<div className="login-header">Login</div>
+			return (<div className={this.state.showLogin ? 'container animated fadeIn' : 'container animated fadeOut'} id="login-form">
+				<div className='logo-login mdi mdi mdi-hexagon-outline'></div>
+				<div className="login-header">Login to get back to it</div>
 				<form onSubmit={this.tryLogin.bind(this)}>
 				<input className='form-input' type="text" ref="email" placeholder="Email" />
 				<input className='form-input' type="password" ref="password" placeholder="Password" />
@@ -67,9 +67,9 @@ export default class LoginForm extends React.Component {
 
 				)
 		} else {
-			return ( <div className='container' id="register-form">
-				<div className='logo-login mdi mdi mdi-hexagon-multiple'></div>
-				<div className="login-header">Register</div>
+			return ( <div className={this.state.showLogin ? 'container animated fadeOut' : 'container animated fadeIn'} id="register-form">
+				<div className='logo-login mdi mdi mdi-hexagon-outline'></div>
+				<div className="login-header">Register to get started</div>
 				<form onSubmit={this.tryRegister.bind(this)}>
 				<input className='form-input' type="text" ref="email" placeholder="Email" />
 				<input className='form-input' type="password" ref="password" placeholder="Password" />

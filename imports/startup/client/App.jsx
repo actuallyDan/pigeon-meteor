@@ -38,7 +38,7 @@ constructor(props) {
   }
   render() {
     return (
-      <div className="App animated fadeIn">
+      <div className="App">
 		{this.state.loggedIn ? <Dashboard /> : <LoginForm registerUser={this.handleRegister.bind(this)} />}
      
 		</div>
