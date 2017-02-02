@@ -30,4 +30,11 @@ Meteor.methods({
 	// getTasks(){
 	// 	return Tasks.find().fetch();
 	// }
+	addQuarkid(guid){
+		Meteor.users.update(Meteor.userId(), {
+				  $set: {
+				    quarkid: guid
+				  }
+				});
+	}
 });
