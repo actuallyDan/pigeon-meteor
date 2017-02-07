@@ -30,11 +30,22 @@ Meteor.methods({
 	// getTasks(){
 	// 	return Tasks.find().fetch();
 	// }
-	addQuarkid(guid){
-		Meteor.users.update(Meteor.userId(), {
-				  $set: {
-				    quarkid: guid
-				  }
-				});
-	}
-});
+	checkIfChannel(username){
+		let userToFind = Meteor.users.findOne({username : username});
+
+		if(userToFind === undefined){
+			return -1;
+		}
+		userToFind = userToFind._id;
+		let chanMembers = [this.userId, userToFind].sort();
+
+		if(Channels.findOne({"members" : chanMembers}) == null){
+				// Channel doesn't yet exist; create it
+				return Channels.insert({"members": chanMembers});
+			} else {
+				return Channels.findOne({"members" : chanMembers})._id;
+			}
+		},
+		
+
+	});

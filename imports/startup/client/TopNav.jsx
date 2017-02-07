@@ -28,10 +28,14 @@ export default class TopNav extends Component {
 		switch(this.props.view){
 
 			case "conversation":
+			// let chanMembers = [Meteor.userId(), this.props.conversation].sort();
+			// let usernames = Channels.findOne({"members" : chanMembers}).members.filter((member)=>{return member !== Meteor.userId()})
+			
 			return(
 				<nav id="topnav" className="animated fadeIn">
 				<div id="settings-button" className="mdi mdi-chevron-left" onClick={this.backToMessages.bind(this)}></div>
-					<div id="conversation-username">{this.props.conversationHeader.username !== "" ? this.props.conversationHeader.username : this.props.conversationHeader.userId}</div>
+					<div id="conversation-username">{this.props.conversation//usernames.map((name)=>{ return name})
+				}</div>
 				<div id="new-message-button" className="mdi mdi-block-helper"></div>
 				</nav>
 				)
