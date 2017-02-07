@@ -16,7 +16,7 @@ export default class TopNav extends Component {
 				return false;
 			}
 			inputValue = inputValue.trim()
-			if(inputValue !== "" && inputValue.length > 6){
+			if(inputValue !== "" && inputValue.length >= 6){
 				propHandler.setConversation(inputValue);		
 			}
 	});

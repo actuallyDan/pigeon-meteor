@@ -1,14 +1,36 @@
 import React from 'react';
 import ConversationSingle from "./ConversationSingle.jsx";
+import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 export default class MessageList extends React.Component {
+	constructor(){
+		super();
+		this.state = {
+			subscription: {
+				"userChannels" : Meteor.subscribe("userChannels"),
+				"allUsers" : Meteor.subscribe("allUsers"),
+				"userMessages" : Meteor.subscribe("userMessages")
+			}
+		};
+	}
 	setConvo(userId){
 		this.props.setConvo(userId);
 	}
+	getChannels(){
+		return Channels.find().fetch();
+	}
 	render(){
-		let channels = this.props.channels;
+		let channels = this.getChannels();
+		// Meteor.call("getChannels", (err, res)=>{
+		// 	if(err){
+		// 		console.log(err)
+		// 	} else {
+		// 		channels = res;
+		// 	}
+		// });
 		console.log(channels);
-		if(channels.length === 0){
+
+		if(typeof channels === "undefined" || channels.length === 0){
 			return (
 				<div id="messagesList">
 				<div id="no-conversations-dialog">

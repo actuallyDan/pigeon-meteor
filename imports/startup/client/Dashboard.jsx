@@ -4,24 +4,26 @@ import Conversation from "./Conversation.jsx";
 import TopNav from './TopNav.jsx';
 import 'sweetalert/dist/sweetalert.css';
 import './styles/swaloverride.css';
-import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 Channels = new Mongo.Collection('Channels');
 Messages = new Mongo.Collection('Messages');
 
 
 
-export default class Dashboard extends TrackerReact(React.Component) {
+export default class Dashboard extends React.Component {
 	constructor(){
 		super();
 		this.state = {
 			view : "messageList",
 			conversation : null,
-			subscriptions: {
-				"channels": Meteor.subscribe("userChannels")
+			subscription: {
+				"userChannels" : Meteor.subscribe("userChannels"),
+				"allUsers" : Meteor.subscribe("allUsers"),
+				"userMessages" : Meteor.subscribe("userMessages")
 			}
 		};
 	}
+
 	updateScroll(){
 		let documentHeight = document.documentElement.offsetHeight;
 		let viewportHeight = window.innerHeight;
@@ -37,45 +39,71 @@ export default class Dashboard extends TrackerReact(React.Component) {
 
 		} else {
 			// User is selecting a new or existing conversation to view
-			Meteor.call("checkIfChannel", username, (data) => {
-				if(data == -1){
-					swal("Oops!", "Looks like that user doesn't exist...", "error");
-				} else {
-					console.log(data);
+			console.log(username)
+			Meteor.call("checkIfChannel", username, (err, res)=>{
 
+				if(err){
+					console.log(err);
+				} else {
 					this.setState({
 						view: "conversation",
-						conversation: data,
-					});
+						conversation : res
+					})
 				}
-			});
-		}
+			})
+		}	
 	}
 	updateLastChecked(userId){
-		
+		let messagesDb = JSON.parse(window.localStorage.getItem("messages"));
+
+		messagesDb[userId].lastChecked = new Date().getTime();
+
+		window.localStorage.setItem("messages", JSON.stringify(messagesDb));					
+
 	}
 	sendMessage(refs){
-		
-		}
-		getChannels(){
-			return Channels.find().fetch();
+		let messageInput = refs.messageText.value.trim();
+		let timestamp = new Date().getTime();
+		let channel = realtime.channels.get(this.state.conversation);
+		let thisUser = this.state.user;
+
+		let messagesDb = JSON.parse(window.localStorage.getItem("messages"));
+		messagesDb[this.state.conversation].messages.push({
+			"userId" : thisUser.userId,
+			"username" : thisUser.username, 
+			"message" : messageInput, 
+			"timestamp" : timestamp
+		});
+		messagesDb[this.state.conversation].lastChecked = new Date().getTime();
+
+		window.localStorage.setItem("messages", JSON.stringify(messagesDb));
+
+			// Update State
+			this.setState({
+				view: "conversation",
+				conversation: this.state.conversation,
+				messagesDb : JSON.parse(window.localStorage.getItem("messages")),
+			});
+
+			// Send Message
+			channel.publish("message", {"userId" : thisUser.userId, "username": thisUser.username, "message" : messageInput, "timestamp" : timestamp});
+			document.getElementById("messageInput").value = "";
+
+			// Scroll to bottom
+			//???
 		}
 		render(){
 			let view;
-			let channels = this.getChannels();
-
-			console.log(channels);
-
 			switch(this.state.view){
 				case "conversation":
-				view = <Conversation sendMessage={this.sendMessage.bind(this)}/>;
+				view = <Conversation conversation={this.state.messagesDb[this.state.conversation]} sendMessage={this.sendMessage.bind(this)}/>;
 				break;
 				default:
-				view = <MessageList setConvo={this.setConversation.bind(this)} channels={channels}/>;
+				view = <MessageList setConvo={this.setConversation.bind(this)}/>;
 			}
 			return(
 				<div className="container animated fadeIn">
-				<TopNav view={this.state.view} setConversation={this.setConversation.bind(this)} conversation={this.state.conversation}/>
+				<TopNav view={this.state.view} setConversation={this.setConversation.bind(this)} />
 				<div id="dashboard-main">
 				{view}
 				</div>

@@ -31,21 +31,23 @@ Meteor.methods({
 	// 	return Tasks.find().fetch();
 	// }
 	checkIfChannel(username){
+		console.log(username);
 		let userToFind = Meteor.users.findOne({username : username});
 
-		if(userToFind === undefined){
-			return -1;
-		}
 		userToFind = userToFind._id;
 		let chanMembers = [this.userId, userToFind].sort();
 
 		if(Channels.findOne({"members" : chanMembers}) == null){
-				// Channel doesn't yet exist; create it
-				return Channels.insert({"members": chanMembers});
-			} else {
-				return Channels.findOne({"members" : chanMembers})._id;
-			}
-		},
+			// Channel doesn't yet exist; create it
+			return Channels.insert({"members": chanMembers});
+		} else {
+			return Channels.findOne({"members" : chanMembers})._id;
+		}
+		return -1;
+	},
+	getChannels(){
+		return Channels.find({}).fetch()
+	}
 		
 
 	});
