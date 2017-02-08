@@ -2,7 +2,7 @@ import React from 'react';
 import ConversationSingle from "./ConversationSingle.jsx";
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
-export default class MessageList extends React.Component {
+export default class MessageList extends TrackerReact(React.Component) {
 	constructor(){
 		super();
 		this.state = {
@@ -21,13 +21,7 @@ export default class MessageList extends React.Component {
 	}
 	render(){
 		let channels = this.getChannels();
-		// Meteor.call("getChannels", (err, res)=>{
-		// 	if(err){
-		// 		console.log(err)
-		// 	} else {
-		// 		channels = res;
-		// 	}
-		// });
+		
 		console.log(channels);
 
 		if(typeof channels === "undefined" || channels.length === 0){

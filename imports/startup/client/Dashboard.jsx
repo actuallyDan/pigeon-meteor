@@ -4,13 +4,14 @@ import Conversation from "./Conversation.jsx";
 import TopNav from './TopNav.jsx';
 import 'sweetalert/dist/sweetalert.css';
 import './styles/swaloverride.css';
+import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
 Channels = new Mongo.Collection('Channels');
 Messages = new Mongo.Collection('Messages');
 
 
 
-export default class Dashboard extends React.Component {
+export default class Dashboard extends TrackerReact(React.Component) {
 	constructor(){
 		super();
 		this.state = {
@@ -29,8 +30,8 @@ export default class Dashboard extends React.Component {
 		let viewportHeight = window.innerHeight;
 		window.scrollTo(0, documentHeight - viewportHeight);
 	}
-	setConversation(username){
-		if(username === null){
+	setConversation(channelId){
+		if(channelId === null){
 			// User is unsetting the conversation and returning to home screen
 			this.setState({
 				view : "messageList",
@@ -39,75 +40,75 @@ export default class Dashboard extends React.Component {
 
 		} else {
 			// User is selecting a new or existing conversation to view
-			console.log(username)
-			Meteor.call("checkIfChannel", username, (err, res)=>{
-
-				if(err){
-					console.log(err);
-				} else {
-					this.setState({
-						view: "conversation",
-						conversation : res
-					})
-				}
-			})
+			this.setState({
+				view : "conversation",
+				conversation : channelId
+			});
 		}	
+		this.updateScroll();
+	}
+	newConvo(username){
+		Meteor.call("checkIfChannel", username, (err, res)=>{
+
+			if(err){
+				console.log(err);
+			} else if(res === -1){
+				swal("Oops!", "No user exists by that name.", "error");
+			} else {
+				this.setState({
+					view: "conversation",
+					conversation : res
+				});
+				console.log("setting state");
+			}
+		})
 	}
 	updateLastChecked(userId){
 		let messagesDb = JSON.parse(window.localStorage.getItem("messages"));
-
 		messagesDb[userId].lastChecked = new Date().getTime();
-
 		window.localStorage.setItem("messages", JSON.stringify(messagesDb));					
-
 	}
 	sendMessage(refs){
 		let messageInput = refs.messageText.value.trim();
 		let timestamp = new Date().getTime();
-		let channel = realtime.channels.get(this.state.conversation);
-		let thisUser = this.state.user;
+		let thisUser = Meteor.user();
 
-		let messagesDb = JSON.parse(window.localStorage.getItem("messages"));
-		messagesDb[this.state.conversation].messages.push({
-			"userId" : thisUser.userId,
-			"username" : thisUser.username, 
-			"message" : messageInput, 
-			"timestamp" : timestamp
-		});
-		messagesDb[this.state.conversation].lastChecked = new Date().getTime();
+		let message = {
+			channel : this.state.conversation,
+			username : thisUser.username,
+			timestamp: timestamp,
+			message: messageInput
+		};
+		Meteor.call("sendMessage", message, (err, res)=>{
+			if(err){
+				console.log(err)
+			} else {
+				document.getElementById("messageInput").value = "";
 
-		window.localStorage.setItem("messages", JSON.stringify(messagesDb));
-
-			// Update State
-			this.setState({
-				view: "conversation",
-				conversation: this.state.conversation,
-				messagesDb : JSON.parse(window.localStorage.getItem("messages")),
-			});
-
-			// Send Message
-			channel.publish("message", {"userId" : thisUser.userId, "username": thisUser.username, "message" : messageInput, "timestamp" : timestamp});
-			document.getElementById("messageInput").value = "";
-
+			this.forceUpdate();
 			// Scroll to bottom
-			//???
+			this.updateScroll();
 		}
-		render(){
-			let view;
-			switch(this.state.view){
-				case "conversation":
-				view = <Conversation conversation={this.state.messagesDb[this.state.conversation]} sendMessage={this.sendMessage.bind(this)}/>;
-				break;
-				default:
-				view = <MessageList setConvo={this.setConversation.bind(this)}/>;
-			}
-			return(
-				<div className="container animated fadeIn">
-				<TopNav view={this.state.view} setConversation={this.setConversation.bind(this)} />
-				<div id="dashboard-main">
-				{view}
-				</div>
-				</div>
-				)
-		}
+	});
 	}
+	render(){
+		let view;
+		switch(this.state.view){
+			case "conversation":
+			let conversation = Messages.find({channel: this.state.conversation}).fetch();
+
+			view = <Conversation conversation={conversation} sendMessage={this.sendMessage.bind(this)}/>;
+			break;
+			default:
+			view = <MessageList setConvo={this.setConversation.bind(this)}/>;
+		}
+		return(
+			<div className="container animated fadeIn">
+			<TopNav view={this.state.view} setConversation={this.setConversation.bind(this)} newConvo={this.newConvo.bind(this)}  />
+			<div id="dashboard-main">
+			{view}
+			</div>
+			</div>
+			)
+	}
+}

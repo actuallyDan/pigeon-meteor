@@ -2,11 +2,11 @@ Channels = new Mongo.Collection('Channels');
 Messages = new Mongo.Collection('Messages');
 
 Meteor.publish("userChannels", function(){
-	return Channels.find();
+	return Channels.find({members:  {$in : [this.userId]}});
 });
 //{members:  {$in : [this.userId]}}
 Meteor.publish("userMessages", function(){
-	return Messages.find();
+	return Messages.find({});
 });
 Meteor.publish("allUsers", function () {
 	return Meteor.users.find({},
