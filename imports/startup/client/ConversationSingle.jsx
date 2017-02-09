@@ -1,16 +1,31 @@
 import React from 'react';
 import moment from 'moment';
+import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
-export default class ConversationSingle extends React.Component {
+export default class ConversationSingle extends TrackerReact(React.Component) {
+	constructor(){
+		super();
+		this.state = {
+			subscription: {
+				"allUsers" : Meteor.subscribe("allUsers"),
+				"userMessages" : Meteor.subscribe("userMessages")
+			}
+		};
+	}
 	setConvo(){
 		this.props.setConvo(this.props.channel._id)
 	}
+	getLastMessage(){
+		return Messages.find({"channel" : this.props.channel._id}).fetch();
+	}
+	getMember(member){
+		return Meteor.users.findOne({'_id' : member}).username
+	}
 	render(){
-		let conversation = this.props.channel;
-		let members = conversation.members.filter((item)=>{return item !== Meteor.userId()});
-		members = members.map((member)=>{ return Meteor.users.findOne({_id : member}).username}).toString();
-
-		let lastMessage = Messages.find({"channel" : conversation._id}).fetch();
+		let members = this.props.channel.members.filter((item)=>{return item !== Meteor.userId()});
+		members = members.map((member)=>{ return this.getMember(member) }).toString();
+		let lastMessage = this.getLastMessage();
+		
 		if(lastMessage.length !== 0){
 			lastMessage = lastMessage[lastMessage.length - 1];
 			return(

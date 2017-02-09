@@ -97,7 +97,7 @@ export default class Dashboard extends TrackerReact(React.Component) {
 			case "conversation":
 			let conversation = Messages.find({channel: this.state.conversation}).fetch();
 
-			view = <Conversation conversation={conversation} sendMessage={this.sendMessage.bind(this)}/>;
+			view = <Conversation conversation={conversation} sendMessage={this.sendMessage.bind(this)} channelId={this.state.conversation}/>;
 			break;
 			default:
 			view = <MessageList setConvo={this.setConversation.bind(this)}/>;

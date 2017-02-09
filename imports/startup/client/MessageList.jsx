@@ -17,14 +17,14 @@ export default class MessageList extends TrackerReact(React.Component) {
 		this.props.setConvo(userId);
 	}
 	getChannels(){
-		return Channels.find().fetch();
+		return Channels.find({}).fetch();
 	}
 	render(){
 		let channels = this.getChannels();
 		
 		console.log(channels);
 
-		if(typeof channels === "undefined" || channels.length === 0){
+		if(channels.length === 0){
 			return (
 				<div id="messagesList">
 				<div id="no-conversations-dialog">

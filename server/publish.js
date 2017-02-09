@@ -12,9 +12,9 @@ Meteor.publish("allUsers", function () {
 	return Meteor.users.find({},
 	{
      // specific fields to return
-     'profile.email': 1,
-     'profile.name': 1,
-     'profile.createdAt': 1
- }
+     '_id' : 1,
+     'username': 1,
+     'createdAt': 1
+	}
  );
 });
