@@ -1,24 +1,8 @@
-/*// @theme-lightest : #a7ffeb;
-// @theme-lighter :  #64ffda;
-// @theme-main : #1de9b6;
-// @theme-darker : #00bfa5;
-// @grey-light : #616161;
-// @grey-dark : #424242;
-// @black : #212121;*/
 @font-face {
   font-family: "Rajdhani";
   src: local(Rajdhani);
   src: url("/fonts/Rajdhani/Rajdhani-400.ttf") format("truetype");
 }
-/*@font-face {
-  font-family: "Biryani";
-  src: local(Biryani), url("/fonts/Biryani/Biryani-Regular.eot");
-  src: url("/fonts/Biryani/Biryani-Regular.eot?") format("embedded-opentype"),
-  url("/fonts/Biryani/Biryani-Regular.woff2") format("woff2"), 
-  url("/fonts/Biryani/Biryani-Regular.woff") format("woff"), 
-  url("/fonts/Biryani/Biryani-Regular.ttf") format("truetype");
-  font-weight: 400;
-  }*/
   body {
     margin: 0;
     padding: 0;
@@ -261,4 +245,15 @@ white-space: nowrap;
 }
 .add-glow {
   box-shadow: 0 0 0.5em rgb(29,233,182);
+}
+@media (min-width: 992px){
+  #messagesList {
+    width: 300px;
+    float: left;
+  }
+  #conversationWrapper{
+    float: right;
+    width: calc(100% - 300px);
+    border-left: 1px solid #1de9b6;
+  }
 }

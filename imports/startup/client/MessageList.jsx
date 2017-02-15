@@ -26,7 +26,7 @@ export default class MessageList extends TrackerReact(React.Component) {
 
 		if(channels.length === 0){
 			return (
-				<div id="messagesList">
+				<div id="messagesList" className={this.props.show === true ? "" : "hidden"}>
 				<div id="no-conversations-dialog">
 				<i className="mdi mdi-human-greeting"> </i>
 				<p>Looks like you don't have any messages yet</p>
@@ -35,7 +35,7 @@ export default class MessageList extends TrackerReact(React.Component) {
 				)
 		} else {
 			return(
-				<div id="messagesList">{
+				<div id="messagesList" className={this.props.show === true ? "" : "hidden"}>{
 					channels.map((channel)=>{
 						return <ConversationSingle channel={channel} setConvo={this.setConvo.bind(this)} key={channel._id}/>
 					})

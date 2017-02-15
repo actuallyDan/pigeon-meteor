@@ -17,7 +17,6 @@ export default class Conversation extends TrackerReact(React.Component) {
 			if(this.refs.messageText.value.trim() !== ""){
 				e.preventDefault();
 				this.props.sendMessage(this.refs);
-				this.forceUpdate();
 			} 
 		}
 	}
@@ -33,13 +32,13 @@ export default class Conversation extends TrackerReact(React.Component) {
 	updateScroll(){
 		let documentHeight = document.documentElement.offsetHeight;
 		let viewportHeight = window.innerHeight;
-		window.scrollTo(0, documentHeight - viewportHeight);
+		document.getElementById("messageList").scrollTo(0, documentHeight - viewportHeight);
 	}
 	render(){
 		let messages = this.getMessages();
 		let thisUser = Meteor.userId();
 		let count = 0;
-		return (<div className="animated fadeIn">
+		return (<div className={this.props.show === true ? "animated fadeIn" : "hidden"} id="conversationWrapper">
 			<div id="messageList">
 			{messages.map((msgObj)=>{
 				++count;

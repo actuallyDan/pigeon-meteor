@@ -21,10 +21,22 @@ export default class Dashboard extends TrackerReact(React.Component) {
 				"userChannels" : Meteor.subscribe("userChannels"),
 				"allUsers" : Meteor.subscribe("allUsers"),
 				"userMessages" : Meteor.subscribe("userMessages")
-			}
+			},
+			width: window.innerWidth > 1399 ? (window.innerWidth - 300) : window.innerWidth > 992 ? (window.innerWidth - 300) : window.innerWidth,
+			
 		};
 	}
 
+	handleResize(){
+		let newWidth = window.innerWidth > 1399 ? (window.innerWidth - 700) : window.innerWidth > 992 ? (window.innerWidth - 300) : window.innerWidth;
+		this.setState({width: newWidth});
+	}
+	componentWillUnmount(){
+		window.removeEventListener('resize');
+	}
+	componentDidMount() {
+		window.addEventListener('resize', this.handleResize.bind(this));	
+	}
 	updateScroll(){
 		let documentHeight = document.documentElement.offsetHeight;
 		let viewportHeight = window.innerHeight;
@@ -85,28 +97,29 @@ export default class Dashboard extends TrackerReact(React.Component) {
 			} else {
 				document.getElementById("messageInput").value = "";
 
-			this.forceUpdate();
+				this.forceUpdate();
 			// Scroll to bottom
 			this.updateScroll();
 		}
 	});
 	}
+	componentDidMount(){
+		this.setState({
+			conversation: Channels.findOne({})._id
+		});
+	}
 	render(){
-		let view;
-		switch(this.state.view){
-			case "conversation":
-			let conversation = Messages.find({channel: this.state.conversation}).fetch();
 
-			view = <Conversation conversation={conversation} sendMessage={this.sendMessage.bind(this)} channelId={this.state.conversation}/>;
-			break;
-			default:
-			view = <MessageList setConvo={this.setConversation.bind(this)}/>;
-		}
+		let viewMessages =  this.state.view === 'messageList' ? true : this.state.width >= 992 ? true : false;
+		let viewConversation = this.state.view === 'conversation' ? true : this.state.width >= 992 ? false : true;
+		let conversation = Messages.find({channel: this.state.conversation}).fetch()
+		
 		return(
 			<div className="container animated fadeIn">
 			<TopNav view={this.state.view} setConversation={this.setConversation.bind(this)} newConvo={this.newConvo.bind(this)}  />
 			<div id="dashboard-main">
-			{view}
+			<MessageList show={viewConversation} setConvo={this.setConversation.bind(this)}/>
+			<Conversation show={viewMessages} conversation={conversation} sendMessage={this.sendMessage.bind(this)} channelId={this.state.conversation}/>
 			</div>
 			</div>
 			)
